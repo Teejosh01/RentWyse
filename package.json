@@ -1,0 +1,33 @@
+{
+  "name": "rentwyse-homepage",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc -b --pretty false",
+    "test": "node tests/homepage.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.3.0",
+    "@fontsource-variable/space-grotesk": "5.3.0",
+    "lucide-react": "1.70.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@sparticuz/chromium": "^143.0.0",
+    "@tailwindcss/vite": "4.3.5",
+    "@types/node": "^22.19.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "axe-core": "4.14.0",
+    "playwright-core": "^1.58.0",
+    "tailwindcss": "4.3.5",
+    "typescript": "~5.9.3",
+    "vite": "8.3.6"
+  }
+}
