@@ -43,6 +43,7 @@ try {
     page.on('requestfailed', (request) => errors.push(`${width}px request: ${request.url()} ${request.failure()?.errorText}`))
     await page.goto(baseUrl, { waitUntil: 'networkidle' })
     await page.evaluate(() => document.fonts.ready)
+    const cleanUrl = page.url().split('#')[0]
 
     assert.equal(await page.locator('main > section').count(), 8, `${width}px: eight homepage sections`)
     assert.equal(await page.locator('h1').count(), 1, `${width}px: one primary heading`)
@@ -94,7 +95,7 @@ try {
       assert.ok(targetTop >= 80 && targetTop <= 140, `${width}px: anchor clears sticky header (${targetTop})`)
     }
 
-    await page.evaluate(() => { window.history.replaceState(null, '', '/'); window.scrollTo({ top: 0, behavior: 'instant' }) })
+    await page.evaluate((url) => { window.history.replaceState(null, '', url); window.scrollTo({ top: 0, behavior: 'instant' }) }, cleanUrl)
     await page.waitForTimeout(100)
     if ([1440, 834, 390].includes(width)) {
       await page.screenshot({ path: `screenshots/homepage-${width}.png`, fullPage: true })

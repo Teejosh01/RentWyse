@@ -26,6 +26,14 @@ npm run build
 npm run preview
 ```
 
+## Standalone Chrome preview
+
+```bash
+npm run build:html
+```
+
+This creates `RentWyse-Homepage-Preview.html` at the repository root. Download or copy that single file and open it directly in Chrome; JavaScript, CSS, fonts and the favicon are embedded, so no server or internet connection is required. It is the same homepage, not a separate page or product flow.
+
 ## Checks
 
 With the development server running:
