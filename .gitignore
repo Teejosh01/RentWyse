@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.preview-build/
+build/
+out/
+.vite/
+.cache/
+*.local
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+playwright-report/
+test-results/
+screenshots/
+.DS_Store
