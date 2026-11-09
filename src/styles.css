@@ -59,15 +59,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .section-intro--split { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 80px; align-items: end; }
 .section-intro--split .section-description { max-width: 440px; justify-self: end; padding-bottom: 4px; }
 .section-intro--centered { max-width: 740px; margin-inline: auto; text-align: center; }
-.section-intro--centered .eyebrow { justify-content: center; }
 .section-intro--centered h2 { margin-bottom: 18px; }
 .section-intro--centered .section-description { max-width: 650px; margin-inline: auto; }
 .section-intro--on-dark h2 { color: #fff; }
 .section-intro--on-dark .section-description { color: #c5d5cb; }
-
-.eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; color: var(--color-green); font-size: 11px; font-weight: 650; line-height: 1.4; letter-spacing: 0.14em; }
-.eyebrow-mark { width: 7px; height: 7px; border-radius: 2px; background: currentColor; transform: rotate(45deg); }
-.eyebrow--on-dark { color: var(--color-lime); }
 
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--color-forest); white-space: nowrap; }
 .brand-symbol { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; background: var(--color-forest); color: var(--color-lime); }
@@ -478,7 +473,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   .hero-description { font-size: 15.5px; line-height: 1.75; }
   .hero-cta { margin-top: 26px; }
   .hero-grid { padding-bottom: 28px; }
-  .eyebrow { font-size: 10px; letter-spacing: 0.12em; }
   .savings-shell { padding: 28px 20px; }
   .feature-copy > .action { margin-top: 28px; }
   .action { font-size: 13px; padding-inline: 21px; }

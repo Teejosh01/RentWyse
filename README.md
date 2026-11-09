@@ -64,6 +64,7 @@ Set `TEST_URL` to test a different running server. Set `CHROMIUM_PATH` to use an
 ## Content and design notes
 
 - `src/content.ts` contains the locked approved copy. Do not rewrite it.
+- Each section opens with its heading. The brief's section names (`label` in `src/content.ts`) identify sections in code and are not shown above the headings. Four of them serve as the header menu links.
 - `docs/design-synthesis.md` records how the supplied MD files and image references were combined.
 - Calls to action are presentation elements that scroll to relevant homepage explanations; they do not start unavailable product flows.
 
