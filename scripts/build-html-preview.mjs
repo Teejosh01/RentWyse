@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, rmSync, mkdirSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync, rmSync, mkdirSync, existsSync } from 'node:fs'
 import { join, dirname, extname, resolve, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { build } from 'vite'
@@ -14,6 +14,7 @@ const mimeTypes = {
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
   '.css': 'text/css',
   '.js': 'text/javascript',
 }
@@ -51,6 +52,10 @@ try {
       outDir: temporaryOutput,
       emptyOutDir: true,
       sourcemap: false,
+      // Photographs are imported from JavaScript, where a file path would point
+      // at nothing once the page is a single document. Have Vite embed every
+      // imported asset as a data URL instead of emitting it as a separate file.
+      assetsInlineLimit: Number.MAX_SAFE_INTEGER,
     },
   })
 
@@ -79,6 +84,15 @@ try {
 
   if (/(?:src|href)=['"]\.?\/?assets\//i.test(html) || /<link\b[^>]*rel=['"]stylesheet['"]/i.test(html)) {
     throw new Error('The standalone preview still references an external build asset.')
+  }
+
+  // Anything else Vite emitted is a file the single document could not reach.
+  const assetsDirectory = join(temporaryOutput, 'assets')
+  const strayAssets = existsSync(assetsDirectory)
+    ? readdirSync(assetsDirectory).filter((file) => !['.js', '.css'].includes(extname(file).toLowerCase()))
+    : []
+  if (strayAssets.length > 0) {
+    throw new Error(`The standalone preview would be missing assets that were not embedded: ${strayAssets.join(', ')}`)
   }
 
   html = html.replace('<!doctype html>', '<!doctype html>\n<!-- Standalone RentWyse homepage preview. Open directly in Chrome; no server required. -->')

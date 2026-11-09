@@ -21,12 +21,22 @@ The references also conflict: two prescribe different blue accents, one is almos
 - Lime for primary actions on dark surfaces; evergreen for actions on light surfaces. No unrelated candy colours or extra accent hues.
 - Space Grotesk for structural, tightly tracked headings; Inter for readable body copy and controls.
 - Pill actions, 24–32px containers, fine architectural rules, matte fills and very restrained shadows.
-- An asymmetric hero with a conceptual phone and floating, slightly rotated feature cards; concentric framing and understated skyline linework connect the property and product stories.
-- Different section compositions: four editorial steps, savings visual/text split, centered payment-plan composition, dark Tenant Score panel, landlord ledger illustration, benefit grid and centered final invitation.
+- An asymmetric hero pairing a photograph of a tenant with floating, slightly rotated example cards; concentric framing and understated skyline linework connect the property and product stories.
+- Different section compositions: four editorial steps, savings app screen/text split, centered payment-plan composition, dark Tenant Score panel, landlord photograph with a rent overview, benefit grid and a final invitation set over a photograph of homes at dusk.
 - Slow, small hover/focus transitions only; reduced-motion support; no parallax or autoplay.
 
 ## Content and scope guardrails
 
-The PDF is the only source of homepage wording. `src/content.ts` holds the approved strings without paraphrasing. Section identifiers are implementation metadata, not extra page copy. Conceptual interface illustrations contain abstract progress marks, bars, checks and the RentWyse brand mark only: no balances, scores, names, transactions, dates, ratings or invented labels.
+The PDF is the only source of homepage wording. `src/content.ts` holds the approved strings without paraphrasing. Section identifiers are implementation metadata, not extra page copy.
+
+### Revision, November 2026: photographs and sample figures
+
+The first build kept every visual abstract: progress marks, bars and checks, with no balances, scores, names or dates. At the client's request this was replaced by a balanced mix of photographs and product examples carrying realistic sample figures.
+
+- Photographs (Hero, For Landlords, final invitation) are AI-generated for RentWyse in a Lagos setting. They depict no real person and no real customer.
+- Product examples (Rent Savings, Flexible Rent Payments, Tenant Score, and the cards beside the two portraits) show believable naira amounts, dates and a score out of 100. All of it is sample data held in `src/sampleData.ts`.
+- How RentWyse Works and Why RentWyse? keep their icons.
+
+What did not change: the approved wording is still locked, and sample figures stay inside the product examples. The page still makes no claim about customer numbers, ratings, rates, fees or returns, and carries no testimonials.
 
 This is one React homepage, with no additional routes, authentication, accounts, database, API, payment processing or operational dashboard. Navigation scrolls to homepage sections. Presentation CTAs lead to relevant explanatory sections rather than unavailable product flows. The footer contains only the brand and approved section names.

@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 import { content, splitFeature } from '../content'
 import { ActionLink, Brand, BrandMark, CheckList, Eyebrow, FeatureDash, SectionIntro } from './ui'
-import { HeroVisual, LandlordVisual, PaymentPlanVisual, SavingsVisual, Skyline, TenantScoreVisual } from './ConceptualVisuals'
+import { FinalBackdrop, HeroVisual, LandlordVisual, PaymentPlanVisual, SavingsVisual, Skyline, TenantScoreVisual } from './Visuals'
 
 const [hero, how, savings, payments, score, landlords, why, final] = content
 
@@ -165,8 +165,7 @@ export function FinalCta() {
   return (
     <section id={final.id} className="section final-section" aria-labelledby="final-heading">
       <div className="container final-panel">
-        <span className="final-orbit final-orbit--left" aria-hidden="true" />
-        <span className="final-orbit final-orbit--right" aria-hidden="true" />
+        <FinalBackdrop />
         <span className="final-mark" aria-hidden="true"><BrandMark /></span>
         <h2 id="final-heading">Your next rent starts with <span>RentWyse.</span></h2>
         <p>{final.description}</p>
@@ -174,7 +173,6 @@ export function FinalCta() {
           <ActionLink href="#how-rentwyse-works" variant="lime">{final.ctas[0]}</ActionLink>
           <ActionLink href="#why-rentwyse" variant="outline">{final.ctas[1]}</ActionLink>
         </div>
-        <Skyline className="final-skyline" />
       </div>
     </section>
   )

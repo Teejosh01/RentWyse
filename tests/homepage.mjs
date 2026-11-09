@@ -35,6 +35,40 @@ async function visibleSectionText(page, id) {
   })
 }
 
+const relativeLuminance = ([red, green, blue]) => {
+  const channel = (value) => { value /= 255; return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4 }
+  return 0.2126 * channel(red) + 0.7152 * channel(green) + 0.0722 * channel(blue)
+}
+
+// Node has no PNG decoder, so the page decodes the screenshot and reports its brightest pixel.
+async function brightestLuminance(page, locator) {
+  const screenshot = await locator.screenshot()
+  return page.evaluate(async (base64) => {
+    const image = new Image()
+    image.src = `data:image/png;base64,${base64}`
+    await image.decode()
+    const canvas = document.createElement('canvas')
+    canvas.width = image.naturalWidth
+    canvas.height = image.naturalHeight
+    const context = canvas.getContext('2d')
+    context.drawImage(image, 0, 0)
+    const { data } = context.getImageData(0, 0, canvas.width, canvas.height)
+    const channel = (value) => { value /= 255; return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4 }
+    let brightest = 0
+    for (let index = 0; index < data.length; index += 4) {
+      const luminance = 0.2126 * channel(data[index]) + 0.7152 * channel(data[index + 1]) + 0.0722 * channel(data[index + 2])
+      if (luminance > brightest) brightest = luminance
+    }
+    return brightest
+  }, screenshot.toString('base64'))
+}
+
+const loadEveryImage = (page) => page.evaluate(async () => {
+  for (const image of document.images) image.loading = 'eager'
+  await Promise.all([...document.images].map((image) => image.decode().catch(() => {})))
+  await document.fonts.ready
+})
+
 try {
   for (const width of widths) {
     const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 1 })
@@ -57,6 +91,30 @@ try {
       const actual = normalize(await visibleSectionText(page, section.id))
       assert.equal(actual, expectedSectionText(section), `${width}px: locked copy in ${section.id}`)
     }
+
+    // Photographs: all three load, and each is described or explicitly decorative.
+    await loadEveryImage(page)
+    const photographs = await page.locator('img').evaluateAll((images) => images.map((image) => ({ alt: image.getAttribute('alt'), loaded: image.complete && image.naturalWidth > 0 })))
+    assert.equal(photographs.length, 3, `${width}px: three photographs`)
+    assert.deepEqual(photographs.filter((image) => !image.loaded || image.alt === null), [], `${width}px: photographs load and carry alt text`)
+
+    // The naira sign must come from the page font, not a mismatched system fallback.
+    const nairaFaces = await page.evaluate(() => [...document.fonts].filter((face) => face.unicodeRange.toUpperCase().includes('20A6')).map((face) => face.status))
+    assert.deepEqual(nairaFaces, ['loaded'], `${width}px: naira glyph font is loaded`)
+
+    // Product examples: announced as examples, kept on screen, and never spilling their text.
+    const exampleLabels = await page.locator('[role="img"]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('aria-label') ?? ''))
+    assert.equal(exampleLabels.length, 5, `${width}px: five product examples`)
+    assert.deepEqual(exampleLabels.filter((label) => !label.startsWith('Example ')), [], `${width}px: every product example is labelled as an example`)
+    const cardProblems = await page.locator('[data-card], .phone-screen').evaluateAll((cards) => cards.flatMap((card) => {
+      const rect = card.getBoundingClientRect()
+      if (rect.width === 0) return []
+      const problems = []
+      if (rect.left < 0 || rect.right > window.innerWidth) problems.push(`${card.className}: outside the viewport`)
+      if (card.scrollWidth > card.clientWidth + 1) problems.push(`${card.className}: content wider than the card`)
+      return problems
+    }))
+    assert.deepEqual(cardProblems, [], `${width}px: example cards stay on screen and contain their text`)
 
     const brokenAnchors = await page.locator('a[href]').evaluateAll((links) => links.filter((link) => {
       const href = link.getAttribute('href')
@@ -101,7 +159,7 @@ try {
       await page.screenshot({ path: `screenshots/homepage-${width}.png`, fullPage: true })
       await page.screenshot({ path: `screenshots/hero-${width}.png` })
     }
-    console.log(`✓ ${width}px: copy, section order, overflow, anchors, tap targets${width <= 1100 ? ', mobile navigation' : ''}`)
+    console.log(`✓ ${width}px: copy, section order, overflow, photographs, examples, anchors, tap targets${width <= 1100 ? ', mobile navigation' : ''}`)
     await page.close()
   }
 
@@ -121,6 +179,26 @@ try {
     assert.deepEqual(results.violations.map((violation) => ({ id: violation.id, nodes: violation.nodes.map((node) => node.target) })), [], `${width}px: accessibility scan`)
     await page.close()
     console.log(`✓ ${width}px: axe WCAG A/AA and best-practice scan`)
+  }
+
+  // axe cannot judge text over a photograph, so measure it: hide the copy, read the
+  // pixels behind each element, and compare its colour with the brightest of them.
+  for (const width of [1440, 834, 320]) {
+    const page = await browser.newPage({ viewport: { width, height: 900 }, deviceScaleFactor: 1 })
+    await page.goto(baseUrl, { waitUntil: 'networkidle' })
+    await loadEveryImage(page)
+    const targets = ['#final-heading', '#final-heading span', '.final-panel > p', '.final-panel .action--outline']
+    const colours = []
+    for (const target of targets) {
+      colours.push(await page.locator(target).evaluate((element) => getComputedStyle(element).color.match(/[\d.]+/g).slice(0, 3).map(Number)))
+    }
+    await page.addStyleTag({ content: '.final-panel h2, .final-panel h2 *, .final-panel > p, .final-panel .action--outline, .final-panel .action--outline * { color: transparent !important; border-color: transparent !important; }' })
+    for (const [index, target] of targets.entries()) {
+      const ratio = (relativeLuminance(colours[index]) + 0.05) / (await brightestLuminance(page, page.locator(target)) + 0.05)
+      assert.ok(ratio >= 4.5, `${width}px: ${target} contrast over the photograph is ${ratio.toFixed(2)}:1, below 4.5:1`)
+    }
+    await page.close()
+    console.log(`✓ ${width}px: final invitation copy keeps AA contrast over its photograph`)
   }
 
   assert.deepEqual(errors, [], 'No browser errors or failed assets')
