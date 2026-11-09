@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/*
+ * Tailwind scans the repository for class names. The generated standalone
+ * preview embeds the whole bundle, so scanning it feeds each build's output
+ * back in as input and the result changes on every rebuild. Keep it out.
+ */
+@source not "../RentWyse-Homepage-Preview.html";
+
 @theme {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk Variable", ui-sans-serif, system-ui, sans-serif;

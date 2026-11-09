@@ -7,6 +7,21 @@ import { createRequire } from 'node:module'
 import chromium from '@sparticuz/chromium'
 import { chromium as playwright } from 'playwright-core'
 
+// The package's "exports" map exposes only its entry point, so
+// `require.resolve('@sparticuz/chromium/package.json')` throws
+// ERR_PACKAGE_PATH_NOT_EXPORTED. Resolve the entry point instead and walk up to
+// the directory that holds the bundled archives.
+function chromiumPackageDirectory() {
+  const require = createRequire(import.meta.url)
+  let directory = dirname(require.resolve('@sparticuz/chromium'))
+  while (!existsSync(join(directory, 'bin', 'al2023.tar.br'))) {
+    const parent = dirname(directory)
+    if (parent === directory) throw new Error('Could not locate the libraries bundled with @sparticuz/chromium.')
+    directory = parent
+  }
+  return directory
+}
+
 // The npm-distributed browser keeps downloads on the npm registry. Its bundled
 // Amazon Linux libraries also let the smoke tests run on a minimal Debian CI box.
 export async function launchBrowser() {
@@ -17,8 +32,7 @@ export async function launchBrowser() {
   const executablePath = await chromium.executablePath()
   const libraryDirectory = join(tmpdir(), 'al2023', 'lib')
   if (!existsSync(join(libraryDirectory, 'libnss3.so'))) {
-    const require = createRequire(import.meta.url)
-    const packageDirectory = dirname(require.resolve('@sparticuz/chromium/package.json'))
+    const packageDirectory = chromiumPackageDirectory()
     const archive = join(tmpdir(), 'rentwyse-al2023.tar')
     const destination = join(tmpdir(), 'al2023')
     writeFileSync(archive, brotliDecompressSync(readFileSync(join(packageDirectory, 'bin', 'al2023.tar.br'))))
