@@ -35,6 +35,21 @@ npm run build:html
 
 This creates `RentWyse-Homepage-Preview.html` at the repository root. Download or copy that single file and open it directly in Chrome; JavaScript, CSS, fonts, photographs and the favicon are embedded, so no server or internet connection is required. It is the same homepage, not a separate page or product flow. The build fails rather than produce a file with a missing image.
 
+## Public link (GitHub Pages)
+
+`.github/workflows/deploy-pages.yml` publishes the homepage every time `main` changes. It builds the site and publishes only the built files; source code, tests and notes are not part of the website.
+
+Address: <https://teejosh01.github.io/RentWyse/>
+
+GitHub Pages has to be switched on once, by the repository owner, before the address works:
+
+1. Open **Settings → Pages** in the repository.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+
+After that, each merge into `main` republishes within a couple of minutes. Progress shows under the **Actions** tab as "Publish homepage". To take the site down, set Source back to "None" on the same settings page.
+
+The address is public: anyone with the link can open it.
+
 ## Checks
 
 With the development server running:
