@@ -1,5 +1,8 @@
 // Approved homepage copy extracted verbatim from the supplied build brief.
 // Do not rewrite these strings. Layout and visual line breaks live in components.
+//
+// `number` and `label` are the brief's own names for each section. They identify
+// the section here and are not shown on the page: each section opens with its heading.
 
 export const content = [
   {

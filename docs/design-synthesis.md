@@ -39,4 +39,8 @@ The first build kept every visual abstract: progress marks, bars and checks, wit
 
 What did not change: the approved wording is still locked, and sample figures stay inside the product examples. The page still makes no claim about customer numbers, ratings, rates, fees or returns, and carries no testimonials.
 
+### Revision, November 2026: section labels removed
+
+At the client's request, the small uppercase label above each section heading (for example "RENT SAVINGS") was removed so each section opens with its heading. Headings, descriptions, points, buttons, photographs and product examples are unchanged. The header and footer menus, which name four of the sections, are unchanged.
+
 This is one React homepage, with no additional routes, authentication, accounts, database, API, payment processing or operational dashboard. Navigation scrolls to homepage sections. Presentation CTAs lead to relevant explanatory sections rather than unavailable product flows. The footer contains only the brand and approved section names.

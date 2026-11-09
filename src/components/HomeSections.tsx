@@ -10,7 +10,7 @@ import {
   Wallet,
 } from 'lucide-react'
 import { content, splitFeature } from '../content'
-import { ActionLink, Brand, BrandMark, CheckList, Eyebrow, FeatureDash, SectionIntro } from './ui'
+import { ActionLink, Brand, BrandMark, CheckList, FeatureDash, SectionIntro } from './ui'
 import { FinalBackdrop, HeroVisual, LandlordVisual, PaymentPlanVisual, SavingsVisual, Skyline, TenantScoreVisual } from './Visuals'
 
 const [hero, how, savings, payments, score, landlords, why, final] = content
@@ -41,7 +41,7 @@ export function HowItWorks() {
   return (
     <section id={how.id} className="section how-section" aria-labelledby="how-heading">
       <div className="container">
-        <SectionIntro id="how-heading" label={how.label} heading={how.heading} description={how.description} split />
+        <SectionIntro id="how-heading" heading={how.heading} description={how.description} split />
         <ol className="steps">
           {how.bullets.map((bullet, index) => {
             const feature = splitFeature(bullet)
@@ -66,7 +66,6 @@ export function RentSavings() {
     <section id={savings.id} className="section savings-section" aria-labelledby="savings-heading">
       <div className="container savings-shell">
         <div className="feature-copy savings-copy">
-          <Eyebrow>{savings.label}</Eyebrow>
           <h2 id="savings-heading">{savings.heading}</h2>
           <p className="section-description">{savings.description}</p>
           <CheckList items={savings.bullets} />
@@ -84,7 +83,7 @@ export function FlexiblePayments() {
   return (
     <section id={payments.id} className="section payments-section" aria-labelledby="payments-heading">
       <div className="container">
-        <SectionIntro id="payments-heading" label={payments.label} heading={payments.heading} description={payments.description} centered />
+        <SectionIntro id="payments-heading" heading={payments.heading} description={payments.description} centered />
         <PaymentPlanVisual />
         <ul className="payment-points">
           {payments.bullets.map((bullet, index) => {
@@ -107,7 +106,6 @@ export function TenantScore() {
       <div className="container tenant-panel">
         <TenantScoreVisual />
         <div className="feature-copy tenant-copy">
-          <Eyebrow onDark>{score.label}</Eyebrow>
           <h2 id="score-heading">Build a rental record that <span>speaks for you.</span></h2>
           <p className="section-description">{score.description}</p>
           <CheckList items={score.bullets} onDark />
@@ -123,7 +121,6 @@ export function ForLandlords() {
     <section id={landlords.id} className="section landlords-section" aria-labelledby="landlords-heading">
       <div className="container landlords-grid">
         <div className="feature-copy">
-          <Eyebrow>{landlords.label}</Eyebrow>
           <h2 id="landlords-heading">{landlords.heading}</h2>
           <p className="section-description">{landlords.description}</p>
           <CheckList items={landlords.bullets} />
@@ -141,7 +138,7 @@ export function WhyRentWyse() {
   return (
     <section id={why.id} className="section why-section" aria-labelledby="why-heading">
       <div className="container">
-        <SectionIntro id="why-heading" label={why.label} heading={why.heading} description={why.description} centered />
+        <SectionIntro id="why-heading" heading={why.heading} description={why.description} centered />
         <div className="benefits-grid">
           {why.bullets.map((bullet, index) => {
             const feature = splitFeature(bullet)

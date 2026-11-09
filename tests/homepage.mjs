@@ -11,9 +11,10 @@ const errors = []
 const browser = await launchBrowser()
 mkdirSync('screenshots', { recursive: true })
 
+// Each section shows its heading, description, points, any note, then its buttons.
+// The brief's section labels are names only and must not appear above the heading.
 function expectedSectionText(section) {
   return normalize([
-    section.number === '01' || section.number === '08' ? '' : section.label,
     section.heading,
     section.description,
     ...section.bullets,

@@ -43,15 +43,6 @@ export function ActionLink({
   )
 }
 
-export function Eyebrow({ children, onDark = false }: { children: ReactNode; onDark?: boolean }) {
-  return (
-    <p className={`eyebrow${onDark ? ' eyebrow--on-dark' : ''}`}>
-      <span className="eyebrow-mark" aria-hidden="true" />
-      {children}
-    </p>
-  )
-}
-
 export function CheckList({ items, onDark = false, columns = false }: { items: readonly string[]; onDark?: boolean; columns?: boolean }) {
   return (
     <ul className={`check-list${onDark ? ' check-list--on-dark' : ''}${columns ? ' check-list--columns' : ''}`}>
@@ -66,7 +57,6 @@ export function CheckList({ items, onDark = false, columns = false }: { items: r
 }
 
 export function SectionIntro({
-  label,
   heading,
   description,
   id,
@@ -74,7 +64,6 @@ export function SectionIntro({
   onDark = false,
   split = false,
 }: {
-  label: string
   heading: ReactNode
   description: string
   id: string
@@ -84,10 +73,7 @@ export function SectionIntro({
 }) {
   return (
     <div className={`section-intro${centered ? ' section-intro--centered' : ''}${split ? ' section-intro--split' : ''}${onDark ? ' section-intro--on-dark' : ''}`}>
-      <div className="section-intro-title">
-        <Eyebrow onDark={onDark}>{label}</Eyebrow>
-        <h2 id={id}>{heading}</h2>
-      </div>
+      <h2 id={id}>{heading}</h2>
       <p className="section-description">{description}</p>
     </div>
   )
